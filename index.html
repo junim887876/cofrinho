@@ -12,7 +12,6 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         .bg-glow { position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%); width: 120vw; height: 120vw; background: radial-gradient(circle, rgba(var(--brand-color-rgb), 0.15) 0%, rgba(2,6,23,0) 70%); z-index: -1; pointer-events: none; }
         .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         input[type="radio"]:checked + div { background-color: rgba(var(--brand-color-rgb), 0.15); border-color: var(--brand-color); color: white; box-shadow: 0 4px 20px 0 rgba(var(--brand-color-rgb), 0.2); transform: translateY(-2px); }
         .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         .physical-card { background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%); border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
@@ -49,10 +48,17 @@
                 <span id="err-cartao" class="text-[11px] text-red-400 hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Selecione um cartão</span>
             </div>
 
+            <!-- TODAS AS CATEGORIAS -->
             <div class="space-y-3">
-                <div class="grid grid-cols-3 gap-2" id="category-container">
-                    <!-- Categorias aqui -->
+                <div class="grid grid-cols-3 gap-2">
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Lazer" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="gamepad-2" class="w-5 h-5"></i> Lazer</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Barbearia" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="scissors" class="w-5 h-5"></i> Barbearia</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Seguro" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5"></i> Seguro</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Bebidas" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="beer" class="w-5 h-5"></i> Bebidas</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Pessoal" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="user" class="w-5 h-5"></i> Pessoal</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Faculdade" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="graduation-cap" class="w-5 h-5"></i> Faculdade</div></label>
                 </div>
+                <label class="cursor-pointer block mt-2"><input type="radio" name="categoria" value="Investimento" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-sm font-medium text-emerald-400 flex items-center justify-center gap-2"><i data-lucide="trending-up" class="w-4 h-4"></i> Investimento</div></label>
                 <span id="err-categoria" class="text-[11px] text-red-400 hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Selecione uma categoria</span>
             </div>
 
@@ -63,18 +69,21 @@
 
             <div class="flex gap-2 pt-4">
                 <button type="button" id="btnAudio" class="p-4 rounded-2xl bg-white/5 border border-white/10 text-slate-400 active:scale-[0.95] transition-all"><i data-lucide="mic" class="w-6 h-6"></i></button>
-                <button type="submit" id="btnEnviar" style="background-color: var(--brand-color);" class="flex-1 py-4 rounded-2xl font-bold text-white shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i> Registrar</button>
+                <button type="submit" id="btnEnviar" style="background-color: var(--brand-color);" class="flex-1 py-4 rounded-2xl font-bold text-white shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i> Registrar Despesa</button>
             </div>
         </form>
     </main>
 
-    <!-- Modal de Confirmação -->
+    <!-- HISTÓRICO -->
+    <div class="w-full max-w-md mt-6 px-2"><h3 class="text-xs font-bold tracking-widest text-slate-500 uppercase mb-3 flex items-center gap-2"><i data-lucide="history" class="w-3 h-3"></i> Últimos Registros</h3><div id="history-container" class="space-y-2"></div></div>
+
+    <!-- MODAL DE VOZ -->
     <div id="confirmModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm hidden flex flex-col items-center justify-center p-6">
         <div class="glass-panel w-full max-w-sm rounded-3xl p-6 text-center space-y-4">
             <h3 class="text-xl font-bold text-white">Confirma os dados?</h3>
             <div id="modalContent" class="text-sm text-slate-400 bg-slate-800/50 p-4 rounded-xl text-left"></div>
             <div class="flex gap-2">
-                <button onclick="closeModal()" class="flex-1 py-3 rounded-xl bg-red-500/10 text-red-400 font-bold">Cancelar</button>
+                <button onclick="document.getElementById('confirmModal').classList.add('hidden')" class="flex-1 py-3 rounded-xl bg-red-500/10 text-red-400 font-bold">Cancelar</button>
                 <button id="btnConfirmarEnvio" class="flex-1 py-3 rounded-xl bg-emerald-500 text-slate-900 font-bold">Confirmar</button>
             </div>
         </div>
@@ -82,28 +91,31 @@
 
     <script>
         lucide.createIcons();
-        const cards = ["Nubank", "PicPay", "Santander", "will bank", "caixa economica federal", "banco do brasil", "Nubank PJ"];
-        const categorias = ["Lazer", "Barbearia", "Seguro", "Bebidas", "Pessoal", "Faculdade", "Investimento"];
+        const cardsData = [
+            { name: "Nubank", color: "#8b5cf6", rgb: "139, 92, 246", logo: "💳" },
+            { name: "PicPay", color: "#22c55e", rgb: "34, 197, 94", logo: "📱" },
+            { name: "Santander", color: "#ef4444", rgb: "239, 68, 68", logo: "🏛️" },
+            { name: "will bank", color: "#eab308", rgb: "234, 179, 8", logo: "💛" },
+            { name: "Caixa", color: "#3b82f6", rgb: "59, 130, 246", logo: "🏦" },
+            { name: "BB", color: "#facc15", rgb: "250, 204, 21", logo: "🔵" },
+            { name: "Nubank PJ", color: "#6b21a8", rgb: "107, 33, 168", logo: "💼" }
+        ];
 
-        // Setup inicial (render dos botões)
+        // RENDER CARTÕES
         const cardContainer = document.getElementById('card-container');
-        cards.forEach(name => {
+        cardsData.forEach(c => {
             const label = document.createElement('label');
             label.className = "cursor-pointer snap-start shrink-0";
-            label.innerHTML = `<input type="radio" name="cartao" value="${name}" class="peer hidden"><div class="px-4 py-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-sm font-semibold text-slate-300 transition-all">${name}</div>`;
+            label.innerHTML = `<input type="radio" name="cartao" value="${c.name}" class="peer hidden" data-color="${c.color}" data-rgb="${c.rgb}"><div class="px-4 py-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-sm font-semibold text-slate-300 transition-all">${c.logo} ${c.name}</div>`;
             cardContainer.appendChild(label);
         });
 
-        // Configuração Voz
+        // LOGICA DE VOZ
         const btnAudio = document.getElementById('btnAudio');
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'pt-BR';
 
-        btnAudio.onclick = () => {
-            btnAudio.classList.add('animate-pulse', 'bg-red-500/20');
-            recognition.start();
-        };
-
+        btnAudio.onclick = () => { btnAudio.classList.add('animate-pulse', 'bg-red-500/20'); recognition.start(); };
         recognition.onresult = (e) => {
             btnAudio.classList.remove('animate-pulse', 'bg-red-500/20');
             const texto = e.results[0][0].transcript.toLowerCase();
@@ -111,51 +123,47 @@
         };
 
         function processarVoz(frase) {
-            // Tenta extrair valor (ex: "50 reais")
             const valorMatch = frase.match(/(\d+)/);
             const valor = valorMatch ? valorMatch[0] : "";
-            
-            // Tenta achar cartão
-            const cartao = cards.find(c => frase.includes(c.toLowerCase()));
-            
-            // Tenta achar categoria
-            const categoria = categorias.find(c => frase.includes(c.toLowerCase()));
+            const cartao = cardsData.find(c => frase.includes(c.name.toLowerCase()));
+            const categorias = ["lazer", "barbearia", "seguro", "bebidas", "pessoal", "faculdade", "investimento"];
+            const catEncontrada = categorias.find(c => frase.includes(c));
 
-            // Se faltar dados vitais, avisa
-            if (!valor || !cartao) {
-                alert("Não entendi tudo. Diga algo como: 'Gastei 50 reais no Nubank para lazer'");
-                return;
-            }
+            if (!valor || !cartao) { alert("Não entendi tudo. Ex: 'Gastei 50 no Nubank com lazer'"); return; }
 
-            // Preenche formulário
             document.getElementById('valorItem').value = "R$ " + valor + ",00";
-            document.getElementById('nomeItem').value = frase.replace(/\d+/, '').replace(cartao, '').replace(categoria || '', '').trim();
+            document.getElementById('nomeItem').value = frase.replace(/\d+/, '').replace(cartao.name.toLowerCase(), '').replace(catEncontrada || '', '').trim();
             
-            // Seleciona radio
-            document.querySelectorAll('input[name="cartao"]').forEach(r => r.checked = r.value === cartao);
+            document.querySelectorAll('input[name="cartao"]').forEach(r => r.checked = r.value === cartao.name);
+            if(catEncontrada) document.querySelectorAll('input[name="categoria"]').forEach(r => r.checked = r.value.toLowerCase() === catEncontrada);
             
-            // Abre modal
-            mostrarModal(valor, cartao, categoria, document.getElementById('nomeItem').value);
-        }
-
-        function mostrarModal(v, c, cat, desc) {
-            document.getElementById('modalContent').innerHTML = `
-                <p><b>Valor:</b> R$ ${v},00</p>
-                <p><b>Cartão:</b> ${c}</p>
-                <p><b>Categoria:</b> ${cat || 'Não definida'}</p>
-                <p><b>O que:</b> ${desc}</p>
-            `;
+            document.getElementById('modalContent').innerHTML = `<p><b>Valor:</b> R$ ${valor},00</p><p><b>Cartão:</b> ${cartao.name}</p><p><b>Cat:</b> ${catEncontrada || 'Não definida'}</p>`;
             document.getElementById('confirmModal').classList.remove('hidden');
         }
 
-        function closeModal() { document.getElementById('confirmModal').classList.add('hidden'); }
-        
-        document.getElementById('btnConfirmarEnvio').onclick = () => {
-            closeModal();
-            document.getElementById('expenseForm').dispatchEvent(new Event('submit'));
+        document.getElementById('btnConfirmarEnvio').onclick = () => { 
+            document.getElementById('confirmModal').classList.add('hidden');
+            document.getElementById('expenseForm').requestSubmit();
         };
 
-        // ... Mantenha o resto da sua lógica de submit (fetch Google Forms) aqui ...
+        // SUBMIT E HISTÓRICO
+        const form = document.getElementById('expenseForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const cartao = document.querySelector('input[name="cartao"]:checked');
+            const categoria = document.querySelector('input[name="categoria"]:checked');
+            if(!cartao || !categoria) { alert("Selecione Cartão e Categoria!"); return; }
+            
+            // Aqui entra o seu fetch (Google Forms URL)
+            const formData = new URLSearchParams();
+            formData.append('entry.1676421799', cartao.value);
+            formData.append('entry.1449755000', categoria.value);
+            formData.append('entry.125552262', document.getElementById('nomeItem').value);
+            formData.append('entry.1754533976', document.getElementById('valorItem').value);
+            
+            fetch('SUA_URL_GOOGLE_FORM_AQUI', { method: 'POST', mode: 'no-cors', body: formData })
+            .then(() => alert("Enviado!"));
+        });
     </script>
 </body>
 </html>
