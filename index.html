@@ -257,7 +257,7 @@
             const cartao = document.querySelector('input[name="cartao"]:checked');
             const categoria = document.querySelector('input[name="categoria"]:checked');
             const nomeItemVal = document.getElementById('nomeItem').value;
-            const valorItemVal = document.getElementById('valorItem').value;
+            const valorItemVal = document.getElementById('valorItem').value.replace('R$ ', '').trim();
             
             if(!cartao || !categoria) { 
                 alert("Selecione um Cartão e uma Categoria!"); 
