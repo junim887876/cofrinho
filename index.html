@@ -14,7 +14,7 @@
         .hide-scroll::-webkit-scrollbar { display: none; }
         input[type="radio"]:checked + div { background-color: rgba(var(--brand-color-rgb), 0.15); border-color: var(--brand-color); color: white; box-shadow: 0 4px 20px 0 rgba(var(--brand-color-rgb), 0.2); transform: translateY(-2px); }
         .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .physical-card { background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%); border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+        .physical-card { background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%); border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); transition: all 0.3s ease; }
         .input-float:focus-within label, .input-float input:not(:placeholder-shown) + label { transform: translateY(-130%) scale(0.85); color: var(--brand-color); }
     </style>
 </head>
@@ -23,7 +23,8 @@
     <div class="bg-glow" id="bgGlow"></div>
 
     <main class="w-full max-w-md glass-panel rounded-[2.5rem] p-1 relative z-10">
-        <div class="physical-card rounded-[2rem] p-6 m-2 mb-4 flex flex-col gap-6">
+        <!-- CARTÃO PREVIEW -->
+        <div id="card-preview-bg" class="physical-card rounded-[2rem] p-6 m-2 mb-4 flex flex-col gap-6">
             <div class="flex justify-between items-start">
                 <div>
                     <div class="text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-1">Valor do Gasto</div>
@@ -38,44 +39,56 @@
                     <div id="preview-title" class="text-sm font-semibold text-white/90 truncate max-w-[150px]">O que foi?</div>
                     <div id="preview-category" class="text-xs text-white/50 mt-1 flex items-center gap-1"><i data-lucide="tag" class="w-3 h-3"></i> Categoria</div>
                 </div>
-                <div id="preview-card" class="text-sm font-medium text-white/70">Conta</div>
+                <div id="preview-card" class="text-sm font-medium text-white/70 flex items-center gap-1"><i data-lucide="credit-card" class="w-4 h-4"></i> Conta</div>
             </div>
         </div>
 
         <form id="expenseForm" class="px-5 pb-6 space-y-7">
+            <!-- CARTÕES -->
             <div class="space-y-3">
                 <div class="flex overflow-x-auto hide-scroll gap-3 pb-2 -mx-2 px-2 snap-x" id="card-container"></div>
-                <span id="err-cartao" class="text-[11px] text-red-400 hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Selecione um cartão</span>
             </div>
 
-            <!-- TODAS AS CATEGORIAS -->
+            <!-- CATEGORIAS -->
             <div class="space-y-3">
                 <div class="grid grid-cols-3 gap-2">
-                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Lazer" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="gamepad-2" class="w-5 h-5"></i> Lazer</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Barbearia" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="scissors" class="w-5 h-5"></i> Barbearia</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Seguro" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5"></i> Seguro</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Bebidas" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="beer" class="w-5 h-5"></i> Bebidas</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Pessoal" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="user" class="w-5 h-5"></i> Pessoal</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Faculdade" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2"><i data-lucide="graduation-cap" class="w-5 h-5"></i> Faculdade</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Lazer" class="peer hidden" data-icon="gamepad-2"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2 transition-all"><i data-lucide="gamepad-2" class="w-5 h-5"></i> Lazer</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Barbearia" class="peer hidden" data-icon="scissors"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2 transition-all"><i data-lucide="scissors" class="w-5 h-5"></i> Barbearia</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Seguro" class="peer hidden" data-icon="shield-check"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2 transition-all"><i data-lucide="shield-check" class="w-5 h-5"></i> Seguro</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Bebidas" class="peer hidden" data-icon="beer"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2 transition-all"><i data-lucide="beer" class="w-5 h-5"></i> Bebidas</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Pessoal" class="peer hidden" data-icon="user"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2 transition-all"><i data-lucide="user" class="w-5 h-5"></i> Pessoal</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="categoria" value="Faculdade" class="peer hidden" data-icon="graduation-cap"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-xs font-medium text-slate-400 text-center flex flex-col items-center gap-2 transition-all"><i data-lucide="graduation-cap" class="w-5 h-5"></i> Faculdade</div></label>
                 </div>
-                <label class="cursor-pointer block mt-2"><input type="radio" name="categoria" value="Investimento" class="peer hidden"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-sm font-medium text-emerald-400 flex items-center justify-center gap-2"><i data-lucide="trending-up" class="w-4 h-4"></i> Investimento</div></label>
-                <span id="err-categoria" class="text-[11px] text-red-400 hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Selecione uma categoria</span>
+                <label class="cursor-pointer block mt-2"><input type="radio" name="categoria" value="Investimento" class="peer hidden" data-icon="trending-up"><div class="p-3 rounded-2xl border border-slate-700/50 bg-slate-800/30 text-sm font-medium text-emerald-400 flex items-center justify-center gap-2 transition-all"><i data-lucide="trending-up" class="w-4 h-4"></i> Investimento</div></label>
             </div>
 
+            <!-- INPUTS DE TEXTO E VALOR -->
             <div class="space-y-6 pt-2">
-                <div class="relative input-float"><input type="text" id="nomeItem" placeholder=" " required class="w-full bg-transparent border-b border-slate-600 px-0 py-2 text-white font-medium focus:outline-none transition-colors peer"><label class="absolute left-0 top-2 text-slate-500 font-medium transition-all duration-200 pointer-events-none">O que você pagou?</label></div>
-                <div class="relative input-float"><input type="text" id="valorItem" placeholder=" " inputmode="numeric" required class="w-full bg-transparent border-b border-slate-600 px-0 py-2 text-white text-2xl font-bold focus:outline-none transition-colors peer"><label class="absolute left-0 top-3 text-slate-500 font-medium transition-all duration-200 pointer-events-none">Qual o valor?</label></div>
+                <div class="relative input-float">
+                    <input type="text" id="nomeItem" placeholder=" " required class="w-full bg-transparent border-b border-slate-600 px-0 py-2 text-white font-medium focus:outline-none transition-colors peer">
+                    <label class="absolute left-0 top-2 text-slate-500 font-medium transition-all duration-200 pointer-events-none">O que você pagou?</label>
+                </div>
+                <div class="relative input-float">
+                    <!-- Usando inputmode="numeric" para forçar teclado numérico no celular (a máscara de moeda vai cuidar dos centavos) -->
+                    <input type="text" id="valorItem" placeholder=" " inputmode="numeric" required class="w-full bg-transparent border-b border-slate-600 px-0 py-2 text-white text-2xl font-bold focus:outline-none transition-colors peer">
+                    <label class="absolute left-0 top-3 text-slate-500 font-medium transition-all duration-200 pointer-events-none">Qual o valor?</label>
+                </div>
             </div>
 
             <div class="flex gap-2 pt-4">
                 <button type="button" id="btnAudio" class="p-4 rounded-2xl bg-white/5 border border-white/10 text-slate-400 active:scale-[0.95] transition-all"><i data-lucide="mic" class="w-6 h-6"></i></button>
-                <button type="submit" id="btnEnviar" style="background-color: var(--brand-color);" class="flex-1 py-4 rounded-2xl font-bold text-white shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i> Registrar Despesa</button>
+                <button type="submit" id="btnEnviar" style="background-color: var(--brand-color);" class="flex-1 py-4 rounded-2xl font-bold text-white shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2">
+                    <i data-lucide="check" class="w-5 h-5"></i> Registrar Despesa
+                </button>
             </div>
         </form>
     </main>
 
-    <!-- HISTÓRICO -->
-    <div class="w-full max-w-md mt-6 px-2"><h3 class="text-xs font-bold tracking-widest text-slate-500 uppercase mb-3 flex items-center gap-2"><i data-lucide="history" class="w-3 h-3"></i> Últimos Registros</h3><div id="history-container" class="space-y-2"></div></div>
+    <!-- HISTÓRICO LOCAL -->
+    <div class="w-full max-w-md mt-6 px-2">
+        <h3 class="text-xs font-bold tracking-widest text-slate-500 uppercase mb-3 flex items-center gap-2"><i data-lucide="history" class="w-3 h-3"></i> Últimos Registros (Local)</h3>
+        <div id="history-container" class="space-y-2 pb-10"></div>
+    </div>
 
     <!-- MODAL DE VOZ -->
     <div id="confirmModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm hidden flex flex-col items-center justify-center p-6">
@@ -90,7 +103,10 @@
     </div>
 
     <script>
+        // INICIA ÍCONES LUCIDE
         lucide.createIcons();
+
+        // DADOS DOS CARTÕES
         const cardsData = [
             { name: "Nubank", color: "#8b5cf6", rgb: "139, 92, 246", logo: "💳" },
             { name: "PicPay", color: "#22c55e", rgb: "34, 197, 94", logo: "📱" },
@@ -101,7 +117,7 @@
             { name: "Nubank PJ", color: "#6b21a8", rgb: "107, 33, 168", logo: "💼" }
         ];
 
-        // RENDER CARTÕES
+        // RENDERIZA OS CARTÕES
         const cardContainer = document.getElementById('card-container');
         cardsData.forEach(c => {
             const label = document.createElement('label');
@@ -110,17 +126,84 @@
             cardContainer.appendChild(label);
         });
 
-        // LOGICA DE VOZ
+        // -------------------------------------------------------------
+        // MÁSCARA DE MOEDA INTELIGENTE E ATUALIZAÇÃO DO PREVIEW (LIVE)
+        // -------------------------------------------------------------
+        const inputValor = document.getElementById('valorItem');
+        const inputNome = document.getElementById('nomeItem');
+        const previewValue = document.getElementById('preview-value');
+        const previewTitle = document.getElementById('preview-title');
+        const previewCategory = document.getElementById('preview-category');
+        const previewCard = document.getElementById('preview-card');
+        const cardBg = document.getElementById('card-preview-bg');
+        
+        // Máscara de Real (R$) - Formata enquanto digita da direita pra esquerda
+        inputValor.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ""); // Remove tudo que não é número
+            
+            if (value === "") {
+                e.target.value = "";
+                previewValue.textContent = "R$ 0,00";
+                return;
+            }
+            
+            // Converte para decimal dividindo por 100
+            let floatValue = (parseInt(value, 10) / 100).toFixed(2);
+            
+            // Troca ponto por vírgula e adiciona os pontos de milhares
+            let formattedValue = floatValue.replace(".", ",");
+            formattedValue = formattedValue.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+            
+            let finalString = "R$ " + formattedValue;
+            e.target.value = finalString;
+            previewValue.textContent = finalString; // Atualiza o cartão de cima
+        });
+
+        // Atualiza Nome no Cartãozinho
+        inputNome.addEventListener('input', function(e) {
+            previewTitle.textContent = e.target.value || "O que foi?";
+        });
+
+        // Atualiza Cartão e Cor no Cartãozinho
+        document.addEventListener('change', function(e) {
+            if(e.target.name === 'cartao') {
+                const cardSelecionado = cardsData.find(c => c.name === e.target.value);
+                previewCard.innerHTML = `${cardSelecionado.logo} ${cardSelecionado.name}`;
+                // Muda a cor do cartão lá em cima levemente
+                cardBg.style.boxShadow = `0 8px 32px 0 rgba(${cardSelecionado.rgb}, 0.3)`;
+                document.documentElement.style.setProperty('--brand-color', cardSelecionado.color);
+                document.documentElement.style.setProperty('--brand-color-rgb', cardSelecionado.rgb);
+            }
+            if(e.target.name === 'categoria') {
+                const iconName = e.target.getAttribute('data-icon');
+                previewCategory.innerHTML = `<i data-lucide="${iconName}" class="w-3 h-3"></i> ${e.target.value}`;
+                lucide.createIcons();
+            }
+        });
+
+        // -------------------------------------------------------------
+        // LÓGICA DE VOZ
+        // -------------------------------------------------------------
         const btnAudio = document.getElementById('btnAudio');
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'pt-BR';
+        if(recognition) {
+            recognition.lang = 'pt-BR';
 
-        btnAudio.onclick = () => { btnAudio.classList.add('animate-pulse', 'bg-red-500/20'); recognition.start(); };
-        recognition.onresult = (e) => {
-            btnAudio.classList.remove('animate-pulse', 'bg-red-500/20');
-            const texto = e.results[0][0].transcript.toLowerCase();
-            processarVoz(texto);
-        };
+            btnAudio.onclick = () => { 
+                btnAudio.classList.add('animate-pulse', 'bg-red-500/20'); 
+                recognition.start(); 
+            };
+            
+            recognition.onresult = (e) => {
+                btnAudio.classList.remove('animate-pulse', 'bg-red-500/20');
+                const texto = e.results[0][0].transcript.toLowerCase();
+                processarVoz(texto);
+            };
+            
+            recognition.onerror = () => btnAudio.classList.remove('animate-pulse', 'bg-red-500/20');
+        } else {
+            btnAudio.style.display = 'none'; // Esconde botão se não suportado
+        }
 
         function processarVoz(frase) {
             const valorMatch = frase.match(/(\d+)/);
@@ -129,13 +212,29 @@
             const categorias = ["lazer", "barbearia", "seguro", "bebidas", "pessoal", "faculdade", "investimento"];
             const catEncontrada = categorias.find(c => frase.includes(c));
 
-            if (!valor || !cartao) { alert("Não entendi tudo. Ex: 'Gastei 50 no Nubank com lazer'"); return; }
+            if (!valor || !cartao) { 
+                alert("Não entendi tudo. Tente falar algo como: 'Gastei 50 no Nubank com lazer'"); 
+                return; 
+            }
 
-            document.getElementById('valorItem').value = "R$ " + valor + ",00";
-            document.getElementById('nomeItem').value = frase.replace(/\d+/, '').replace(cartao.name.toLowerCase(), '').replace(catEncontrada || '', '').trim();
+            // Preenche os inputs para engatilhar as máscaras
+            document.getElementById('valorItem').value = valor + "00"; // Simula digitação para a máscara pegar
+            document.getElementById('valorItem').dispatchEvent(new Event('input')); // Dispara a máscara e o preview
+
+            const nomeLimpo = frase.replace(/\d+/, '').replace(cartao.name.toLowerCase(), '').replace(catEncontrada || '', '').replace(/gastei/i, '').trim();
+            document.getElementById('nomeItem').value = nomeLimpo.charAt(0).toUpperCase() + nomeLimpo.slice(1);
+            document.getElementById('nomeItem').dispatchEvent(new Event('input')); // Atualiza preview
             
-            document.querySelectorAll('input[name="cartao"]').forEach(r => r.checked = r.value === cartao.name);
-            if(catEncontrada) document.querySelectorAll('input[name="categoria"]').forEach(r => r.checked = r.value.toLowerCase() === catEncontrada);
+            document.querySelectorAll('input[name="cartao"]').forEach(r => {
+                r.checked = r.value === cartao.name;
+                if(r.checked) r.dispatchEvent(new Event('change', {bubbles:true}));
+            });
+            if(catEncontrada) {
+                document.querySelectorAll('input[name="categoria"]').forEach(r => {
+                    r.checked = r.value.toLowerCase() === catEncontrada;
+                    if(r.checked) r.dispatchEvent(new Event('change', {bubbles:true}));
+                });
+            }
             
             document.getElementById('modalContent').innerHTML = `<p><b>Valor:</b> R$ ${valor},00</p><p><b>Cartão:</b> ${cartao.name}</p><p><b>Cat:</b> ${catEncontrada || 'Não definida'}</p>`;
             document.getElementById('confirmModal').classList.remove('hidden');
@@ -146,24 +245,93 @@
             document.getElementById('expenseForm').requestSubmit();
         };
 
-        // SUBMIT E HISTÓRICO
+        // -------------------------------------------------------------
+        // SUBMIT PARA O GOOGLE FORMS E HISTÓRICO
+        // -------------------------------------------------------------
         const form = document.getElementById('expenseForm');
+        
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            const btnEnviar = document.getElementById('btnEnviar');
             const cartao = document.querySelector('input[name="cartao"]:checked');
             const categoria = document.querySelector('input[name="categoria"]:checked');
-            if(!cartao || !categoria) { alert("Selecione Cartão e Categoria!"); return; }
+            const nomeItemVal = document.getElementById('nomeItem').value;
+            const valorItemVal = document.getElementById('valorItem').value;
             
-            // Aqui entra o seu fetch (Google Forms URL)
+            if(!cartao || !categoria) { 
+                alert("Selecione um Cartão e uma Categoria!"); 
+                return; 
+            }
+            
+            // Alterando o estado do botão
+            const btnTextoOriginal = btnEnviar.innerHTML;
+            btnEnviar.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Enviando...';
+            lucide.createIcons();
+            btnEnviar.disabled = true;
+
             const formData = new URLSearchParams();
+            
+            // SEUS IDs DE ENTRADA EXATOS E CORRETOS
             formData.append('entry.1676421799', cartao.value);
             formData.append('entry.1449755000', categoria.value);
-            formData.append('entry.125552262', document.getElementById('nomeItem').value);
-            formData.append('entry.1754533976', document.getElementById('valorItem').value);
+            formData.append('entry.125552262', nomeItemVal);
+            formData.append('entry.1754533976', valorItemVal);
             
-            fetch('SUA_URL_GOOGLE_FORM_AQUI', { method: 'POST', mode: 'no-cors', body: formData })
-            .then(() => alert("Enviado!"));
+            // SUA URL DO FORM RESPONSE CORRETA
+            const googleFormURL = 'https://docs.google.com/forms/d/e/1FAIpQLSepEjxW5sEXNhrjDj_wA20Dc6pk_GfzpfmdwhGUUSRLFGOOdA/formResponse';
+            
+            fetch(googleFormURL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: formData 
+            })
+            .then(() => {
+                // Sucesso
+                btnEnviar.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> Registrado!';
+                btnEnviar.classList.replace('bg-brand', 'bg-emerald-500');
+                lucide.createIcons();
+                
+                // Adiciona ao histórico na tela
+                addAoHistorico(nomeItemVal, valorItemVal, cartao.value);
+                
+                setTimeout(() => {
+                    form.reset();
+                    btnEnviar.innerHTML = btnTextoOriginal;
+                    btnEnviar.disabled = false;
+                    btnEnviar.classList.replace('bg-emerald-500', 'bg-brand');
+                    
+                    // Reseta o Preview Card
+                    document.getElementById('preview-value').textContent = 'R$ 0,00';
+                    document.getElementById('preview-title').textContent = 'O que foi?';
+                    document.getElementById('preview-category').innerHTML = '<i data-lucide="tag" class="w-3 h-3"></i> Categoria';
+                    document.getElementById('preview-card').innerHTML = '<i data-lucide="credit-card" class="w-4 h-4"></i> Conta';
+                    document.getElementById('card-preview-bg').style.boxShadow = '0 8px 32px 0 rgba(0, 0, 0, 0.3)';
+                    lucide.createIcons();
+                }, 2000);
+            })
+            .catch((error) => {
+                alert("Erro ao enviar. Verifique sua conexão.");
+                btnEnviar.innerHTML = btnTextoOriginal;
+                btnEnviar.disabled = false;
+                lucide.createIcons();
+            });
         });
+
+        // Função rápida para mostrar histórico de envios locais
+        function addAoHistorico(nome, valor, cartao) {
+            const hist = document.getElementById('history-container');
+            const item = document.createElement('div');
+            item.className = 'glass-panel p-3 rounded-2xl flex justify-between items-center text-sm mb-2';
+            item.innerHTML = `
+                <div>
+                    <div class="font-bold text-white">${nome}</div>
+                    <div class="text-xs text-slate-500">${cartao}</div>
+                </div>
+                <div class="font-bold text-emerald-400">${valor}</div>
+            `;
+            hist.prepend(item);
+        }
     </script>
 </body>
 </html>
